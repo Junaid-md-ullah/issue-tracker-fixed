@@ -8,27 +8,28 @@ function submitIssue(e) {
   const id = Math.floor(Math.random()*100000000);
   var status = 'Open';
 
+
   const issue = { id, description, severity, assignedTo, status };
   let issues = [];
   if (localStorage.getItem('issues')){
     issues = JSON.parse(localStorage.getItem('issues'));
   }
   issues.push(issue);
-  // var ab=issues.length;
 
   localStorage.setItem('issues', JSON.stringify(issues));
   
   document.getElementById('issueInputForm').reset();
   fetchIssues();
   e.preventDefault();
+
+
 }
-
-
 const setStatusClosed = id => {
   const issues = JSON.parse(localStorage.getItem('issues'));
   const currentIssue = issues.find(issue => issue.id == id);
   currentIssue.status = 'Closed';
- 
+  // var ele=document.getElementById('strike');
+  currentIssue.description=currentIssue.description.strike();
   localStorage.setItem('issues', JSON.stringify(issues));
   fetchIssues();
 }
@@ -47,22 +48,25 @@ const fetchIssues = () => {
 
   for (var i = 0; i < issues.length; i++) {
     const {id, description, severity, assignedTo, status} = issues[i];
+    
 
     issuesList.innerHTML +=   `<div class="well">
                               <h6>Issue ID: ${id} </h6>
                               <p><span class="label label-info"> ${status} </span></p>
-                              <h3 id="strike"> ${description} </h3>
+                              <h3 class="text-break" id="strike"> ${description} </h3>
                               <p><span class="glyphicon glyphicon-time"></span> ${severity}</p>
-                              <p><span class="glyphicon glyphicon-user"></span> ${assignedTo}</p>
-                              <a href="#" onclick="setStatusClosed(${id});return false;" class="btn btn-warning">Close</a>
-                              <a href="#" onclick="deleteIssue(${id});return false;" class="btn btn-danger">Delete</a>
+                              <p><span class="text-break glyphicon glyphicon-user"></span> ${assignedTo}</p>
+                              <a href="javascript:;" onclick="setStatusClosed(${id})" class="btn btn-warning">Close</a>
+                              <a href="javascript:;" onclick="deleteIssue(${id})" class="btn btn-danger">Delete</a>
                               </div>`;
   }
-
+//total issues
   const totalIssues=JSON.parse(localStorage.getItem('issues'));
 const total=totalIssues.length;
 const totaltag=document.getElementById('totalv').innerText=total;
 
+
+//total issue opened
 var count=0;
 
 for(let i=0;i<totalIssues.length;i++){
